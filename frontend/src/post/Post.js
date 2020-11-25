@@ -45,12 +45,16 @@ export default class Post extends Component {
           <Link to={`/`} className="btn btn-primary btn-raised btn-sm mr-5">
             Back to All Posts
           </Link>
+
           {isAuthenticated().user &&
             isAuthenticated().user._id === post.author._id && (
               <>
-                <button class="btn btn-raised btn-info mr-5">
+                <Link
+                  to={`/post/edit/${post._id}`}
+                  className="btn btn-warning btn-raised btn-sm mr-5"
+                >
                   Update Post
-                </button>
+                </Link>
                 <button
                   class="btn btn-raised btn-danger"
                   onClick={this.confirmDelete}
