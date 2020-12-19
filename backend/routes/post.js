@@ -12,6 +12,8 @@ const {
   getPhoto,
   like,
   unlike,
+  comment,
+  uncomment,
 } = require("../controllers/post");
 
 const { createPostValidator } = require("../validator");
@@ -23,6 +25,8 @@ const router = express.Router();
 router.get("/posts", getPosts);
 router.put("/post/like", requireSignin, like);
 router.put("/post/unlike", requireSignin, unlike);
+router.put("/post/comment", requireSignin, comment);
+router.put("/post/uncomment", requireSignin, uncomment);
 router.post(
   "/post/new/:userId",
   requireSignin,

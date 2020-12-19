@@ -7,6 +7,8 @@ import DefaultPostImage from "../images/default_post_image.webp";
 
 import { isAuthenticated } from "../auth";
 
+import Comment from "./Comment";
+
 export default class Post extends Component {
   state = {
     post: "",
@@ -14,6 +16,7 @@ export default class Post extends Component {
     redirectToLogin: false,
     like: false,
     likes: 0,
+    comments: [],
   };
 
   componentDidMount = () => {
@@ -26,6 +29,7 @@ export default class Post extends Component {
           post: data,
           likes: data.likes.length,
           like: this.checkLiked(data.likes),
+          comments: data.comments,
         });
     });
   };
@@ -137,8 +141,12 @@ export default class Post extends Component {
     });
   };
 
+  updateComments = (comments) => {
+    this.setState({ comments: comments });
+  };
+
   render() {
-    const { post, redirectToPosts, redirectToLogin } = this.state;
+    const { post, redirectToPosts, redirectToLogin, comments } = this.state;
 
     if (redirectToPosts) return <Redirect to={`/`} />;
     else if (redirectToLogin) return <Redirect to={`/signin`} />;
@@ -153,6 +161,11 @@ export default class Post extends Component {
         ) : (
           this.renderPost(post)
         )}
+        <Comment
+          postId={post._id}
+          comments={comments}
+          updateComments={this.updateComments}
+        />
       </div>
     );
   }

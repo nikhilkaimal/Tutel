@@ -7,6 +7,7 @@ const Post = require("../models/post");
 exports.findPostById = (req, res, next, id) => {
   Post.findById(id)
     .populate("author", "_id name")
+    .populate("comments.author", "_id name")
     .exec((err, post) => {
       if (err || !post) res.status(400).json({ error: err });
 
@@ -19,6 +20,8 @@ exports.findPostById = (req, res, next, id) => {
 exports.getPosts = (req, res) => {
   const posts = Post.find()
     .populate("author", "_id name")
+    .populate("comments", "text created")
+    .populate("comments.postedBy", "_id name")
     .select("_id title body created likes")
     .sort({ created: -1 })
     .then((posts) => {
@@ -171,4 +174,41 @@ exports.unlike = (req, res) => {
     if (err) return res.status(400).json({ errpr: err });
     else res.json(result);
   });
+};
+
+exports.comment = (req, res) => {
+  let comment = req.body.comment;
+  comment.author = req.body.userId;
+
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $push: { comments: comment },
+    },
+    { new: true }
+  )
+    .populate("comments.author", "_id name")
+    .populate("author", "_id name")
+    .exec((err, result) => {
+      if (err) return res.status(400).json({ errpr: err });
+      else res.json(result);
+    });
+};
+
+exports.uncomment = (req, res) => {
+  let comment = req.body.comment;
+
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $pull: { comments: { _id: comment._id } },
+    },
+    { new: true }
+  )
+    .populate("comments.author", "_id name")
+    .populate("author", "_id name")
+    .exec((err, result) => {
+      if (err) return res.status(400).json({ errpr: err });
+      else res.json(result);
+    });
 };
