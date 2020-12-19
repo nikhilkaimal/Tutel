@@ -120,7 +120,7 @@ export default class Post extends Component {
   };
 
   like = () => {
-    if (isAuthenticated()) {
+    if (!isAuthenticated()) {
       this.setState({ redirectToLogin: true });
       return false;
     }
