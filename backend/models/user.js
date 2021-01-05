@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const { v1: uuidv1 } = require('uuid');
-const crypto = require('crypto');
-const { Buffer } = require('buffer');
+const mongoose = require("mongoose");
+const { v1: uuidv1 } = require("uuid");
+const crypto = require("crypto");
+const { Buffer } = require("buffer");
 const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
     contentType: String,
   },
   about: { type: String, trim: true },
-  following: [{ type: ObjectId, ref: 'User' }],
-  followers: [{ type: ObjectId, ref: 'User' }],
+  following: [{ type: ObjectId, ref: "User" }],
+  followers: [{ type: ObjectId, ref: "User" }],
   hashed_password: {
     type: String,
     required: true,
@@ -32,11 +32,15 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
   updated: Date,
+  resetPasswordLink: {
+    data: String,
+    default: "",
+  },
 });
 
 // virtual field
 userSchema
-  .virtual('password')
+  .virtual("password")
   .set(function (password) {
     // temp variable -> _password
     this._password = password;
@@ -57,17 +61,17 @@ userSchema.methods = {
     return this.encryptPassword(plainText) === this.hashed_password;
   },
   encryptPassword: function (password) {
-    if (!password) return 'no password';
+    if (!password) return "no password";
 
     try {
       return crypto
-        .createHmac('sha1', this.salt)
+        .createHmac("sha1", this.salt)
         .update(password)
-        .digest('hex');
+        .digest("hex");
     } catch (err) {
       return err;
     }
   },
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
