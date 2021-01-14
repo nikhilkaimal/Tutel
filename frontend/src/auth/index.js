@@ -92,6 +92,7 @@ export const resetPassword = (resetInfo) => {
 };
 
 export const socialLogin = (user) => {
+  console.log("user",user);
   return fetch(`${process.env.REACT_APP_API_URL}/social-login/`, {
     method: "POST",
     headers: {
