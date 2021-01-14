@@ -33,7 +33,7 @@ app.use(expressValidator());
 app.use(cookieParser());
 app.use(cors());
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   fs.readFile('docs/apiDocs.json', (err, data) => {
     if (err) return res.status(400).json({ error: err });
 
@@ -42,9 +42,9 @@ app.get('/', (req, res) => {
     res.json(docs);
   });
 });
-app.use('/', postRoutes);
-app.use('/', authRoutes);
-app.use('/', userRoutes);
+app.use('/api', postRoutes);
+app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
