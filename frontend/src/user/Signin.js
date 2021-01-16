@@ -83,7 +83,7 @@ export default class Signin extends Component {
       body: JSON.stringify(user),
     })
       .then((res) => {
-        console.log("res from http://localhost:8080/signin", res);
+        // console.log("res from http://localhost:8080/signin", res);
         return res.json();
       })
       .catch((err) => console.log(err));
